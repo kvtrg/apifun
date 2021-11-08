@@ -1,0 +1,87 @@
+<!doctype html>
+<!-- <Files "*.json">
+Header set Access-Control-Allow-Origin "*" </Files> -->
+<html>
+<head>
+	<title>API FUN!</title>
+	<meta charset="utf-8"/>
+
+	<script>
+		function loadFile() {
+			/* Step 1: Make instance of request object...
+			...to make HTTP request after page is loaded*/
+			request = new XMLHttpRequest();
+			console.log("1 - request object created");
+
+			// Step 2: Set the URL for the AJAX request to be the JSON file
+
+			request.open("GET", "https://ghibliapi.herokuapp.com/films/", true);
+
+			console.log("2 - opened request file");
+
+			// Step 3: set up event handler/callback
+
+			request.onreadystatechange = function() {
+				console.log("3 - readystatechange event fired.");
+
+				var ghibli = [];
+				if (request.readyState == 4 && request.status == 200) {
+
+					// Step 5: wait for done + success
+
+					result = request.responseText;
+					ghibli = JSON.parse(result);
+
+
+					strHTML = "<ul>";
+					ghibli.forEach(function(film) {
+					  strHTML += "<li> Title: " + film.title + "</li>";
+						strHTML += "<li> Original Title: " + film.original_title + "</li>";
+						strHTML += "<li> Description: " + film.description + "</li>";
+						strHTML += "<li> Director: " + film.director + "</li>";
+						strHTML += "<li> Release Date: " + film.release_date + "</li></br>";
+
+					})
+					strHTML += "</ul>";
+					document.getElementById("data").innerHTML =strHTML;
+				}
+				else if (request.readyState == 4 && request.status != 200) {
+
+				document.getElementById("data").innerHTML = "Something is wrong!  Check the logs to see where this went off the rails";
+
+				}
+
+				else if (request.readyState == 3) {
+
+					document.getElementById("data").innerHTML = "Too soon!  Try again";
+
+				}
+
+			}
+		// Step 4: fire off the HTTP request
+			request.send();
+			console.log("4 - Request sent");
+		}
+	</script>
+</head>
+
+
+<body onload="loadFile()">
+
+	<h1>Studio Ghibli Films!</h1>
+	<div id="data">Loading...</div>
+
+	<h1>Info about this web page:</h1>
+	<ul>
+		<li>I selected the Studio Ghibli API that catalogs the people, places, and things
+			found in the the worlds of Ghibli Studio.</li>
+		<li>The website where I found the API is <a href="https://ghibliapi.herokuapp.com" target="_blank">here</a>.</li>
+		<li>I chose to display Title, Original Title, Description, Director and Release Date of these films because
+				this is usually the information that users tend to look for. Even though the API also has an intensive
+				archiv of people who worked in these films, as well as their age, pets, etc., I don't think that information is
+				very useful. </li>
+		<li>This API would be helpful for someone who is looking for the filmography of Ghibli Studio, and the generic information about these films.</li>
+	</ul>
+
+</body>
+</html>
